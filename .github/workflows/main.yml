@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: 
       - build_and_push_to_docker_hub
-      - build_frontend_and_push_to_docker_hub:
+      - build_frontend_and_push_to_docker_hub
     steps:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
@@ -81,8 +81,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          sudp docker pull angelikade/foodgram_frontend:latest
-          sudp docker pull angelikade/foodgram_backend:latest
+          sudo docker pull angelikade/foodgram_frontend:latest
+          sudo docker pull angelikade/foodgram_backend:latest
           cd foodgram
           sudo docker compose pull
           sudo docker compose down
