@@ -9,9 +9,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
-from users.models import Subscription, User
+from users.models import Follow, CustomUser
 
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
@@ -42,11 +42,11 @@ class SubscribeView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        author = get_object_or_404(User, id=id)
-        if Subscription.objects.filter(
+        author = get_object_or_404(CustomUser, id=id)
+        if Follow.objects.filter(
            user=request.user, author=author).exists():
             subscription = get_object_or_404(
-                Subscription, user=request.user, author=author
+                Follow, user=request.user, author=author
             )
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -61,7 +61,7 @@ class ShowSubscriptionsView(ListAPIView):
 
     def get(self, request):
         user = request.user
-        queryset = User.objects.filter(author__user=user)
+        queryset = CustomUser.objects.filter(author__user=user)
         page = self.paginate_queryset(queryset)
         serializer = ShowSubscriptionsSerializer(
             page, many=True, context={'request': request}
@@ -80,7 +80,7 @@ class FavoriteView(APIView):
             'user': request.user.id,
             'recipe': id
         }
-        if not Favorite.objects.filter(
+        if not FavoriteRecipe.objects.filter(
            user=request.user, recipe__id=id).exists():
             serializer = FavoriteSerializer(
                 data=data, context={'request': request}
@@ -93,9 +93,9 @@ class FavoriteView(APIView):
 
     def delete(self, request, id):
         recipe = get_object_or_404(Recipe, id=id)
-        if Favorite.objects.filter(
+        if FavoriteRecipe.objects.filter(
            user=request.user, recipe=recipe).exists():
-            Favorite.objects.filter(user=request.user, recipe=recipe).delete()
+            FavoriteRecipe.objects.filter(user=request.user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
