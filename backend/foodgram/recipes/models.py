@@ -1,9 +1,10 @@
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
+from users.models import CustomUser
 
-User = get_user_model()
+# User = get_user_model()
 
 
 class Ingredient(models.Model):
@@ -53,7 +54,7 @@ class Recipe(models.Model):
         related_name='tags'
     )
     author = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор'
@@ -145,7 +146,7 @@ class ShoppingCart(models.Model):
     """ Модель корзины. """
 
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
         related_name='shopping_cart',
@@ -170,7 +171,7 @@ class FavoriteRecipe(models.Model):
     """ Модель избранного. """
 
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
         related_name='favorites',
