@@ -5,7 +5,7 @@ from django.db.models import UniqueConstraint
 from .validators import validate_username
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     """ Кастомная модель пользователя. """
 
     email = models.EmailField('Почта', max_length=254, unique=True)
@@ -25,17 +25,17 @@ class User(AbstractUser):
         return self.username
 
 
-class Subscription(models.Model):
+class Follow(models.Model):
     """ Модель подписок. """
 
     user = models.ForeignKey(
-        User,
+        CustomUser,
         related_name='follower',
         on_delete=models.CASCADE,
         verbose_name='Подписчик'
     )
     author = models.ForeignKey(
-        User,
+        CustomUser,
         related_name='author',
         on_delete=models.CASCADE,
         verbose_name='Автор'

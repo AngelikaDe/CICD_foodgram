@@ -2,10 +2,10 @@ from django.contrib import admin
 
 from foodgram.settings import EMPTY
 
-from .models import Subscription, User
+from .models import CustomUser, Follow
 
 
-@admin.register(User)
+@admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email', 'first_name', 'last_name']
     search_fields = ['username', 'email']
@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY
 
 
-@admin.register(Subscription)
+@admin.register(Follow)
 class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ['user', 'author']
     search_fields = [

@@ -10,7 +10,7 @@ class Ingredient(models.Model):
     """ Модель ингредиента. """
 
     name = models.CharField(
-        'Название ингредиента',
+        'Название',
         max_length=200
     )
     measurement_unit = models.CharField('Единицы измерения', max_length=200)
@@ -30,7 +30,7 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     """ Модель тега. """
 
-    name = models.CharField('Название тега', unique=True, max_length=200)
+    name = models.CharField('Название', unique=True, max_length=200)
     color = models.CharField('Цвет', unique=True, max_length=7)
     slug = models.SlugField('Slug', unique=True, max_length=200)
 
@@ -56,7 +56,7 @@ class Recipe(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='recipes',
-        verbose_name='Автор рецепта'
+        verbose_name='Автор'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
@@ -67,10 +67,9 @@ class Recipe(models.Model):
         'Изображение',
         upload_to='recipes/images/'
     )
-    name = models.CharField('Название рецепта', max_length=200)
+    name = models.CharField('Название', max_length=200)
     text = models.TextField(
-        'Описание рецепта',
-        help_text='Введите описание рецепта'
+        'Описание',
     )
     cooking_time = models.PositiveIntegerField(
         verbose_name='Время приготовления',
@@ -79,7 +78,7 @@ class Recipe(models.Model):
         )]
     )
     pub_date = models.DateTimeField(
-        'Время публикации',
+        'Дата создания',
         auto_now_add=True,
     )
 
@@ -167,7 +166,7 @@ class ShoppingCart(models.Model):
         ]
 
 
-class Favorite(models.Model):
+class FavoriteRecipe(models.Model):
     """ Модель избранного. """
 
     user = models.ForeignKey(
@@ -184,6 +183,8 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Избранный рецепт'
+        verbose_name_plural = 'Избранные рецепты'
         constraints = [
             UniqueConstraint(
                 fields=['user', 'recipe'],

@@ -3,16 +3,16 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
                             RecipeTag, ShoppingCart, Tag)
-from users.models import Subscription, User
+from users.models import Follow, CustomUser
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя. """
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             'email',
             'username',
@@ -28,7 +28,7 @@ class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             'id',
             'email',
@@ -42,7 +42,7 @@ class CustomUserSerializer(UserSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(
+        return Follow.objects.filter(
             user=request.user, author=obj
         ).exists()
 
@@ -111,7 +111,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Favorite.objects.filter(
+        return FavoriteRecipe.objects.filter(
             user=request.user, recipe_id=obj
         ).exists()
 
@@ -250,7 +250,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
     """ Сериализатор модели Избранное. """
 
     class Meta:
-        model = Favorite
+        model = FavoriteRecipe
         fields = ['user', 'recipe']
 
     def to_representation(self, instance):
@@ -267,7 +267,7 @@ class ShowSubscriptionsSerializer(serializers.ModelSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             'id',
             'email',
@@ -283,7 +283,7 @@ class ShowSubscriptionsSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(
+        return Follow.objects.filter(
             user=request.user, author=obj).exists()
 
     def get_recipes(self, obj):
@@ -305,11 +305,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     """ Сериализатор подписок. """
 
     class Meta:
-        model = Subscription
+        model = Follow
         fields = ['user', 'author']
         validators = [
             UniqueTogetherValidator(
-                queryset=Subscription.objects.all(),
+                queryset=Follow.objects.all(),
                 fields=['user', 'author'],
             )
         ]
