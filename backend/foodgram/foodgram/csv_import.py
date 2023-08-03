@@ -3,8 +3,8 @@ import csv
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
+# from ..api.models import Ingredient
 from api.models import Ingredient
-
 
 class Command(BaseCommand):
     help = 'Import data from data/ingredients.csv'
