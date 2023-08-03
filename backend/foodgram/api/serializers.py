@@ -3,10 +3,12 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
+from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
                             RecipeTag, ShoppingCart, Tag)
 from users.models import Follow, CustomUser
 
+MIN_COOKING_TIME = 1
+MAX_COOKING_TIME = 32000
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя. """
@@ -87,6 +89,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         method_name='get_is_favorited')
     is_in_shopping_cart = serializers.SerializerMethodField(
         method_name='get_is_in_shopping_cart')
+    cooking_time = serializers.IntegerField(min_value=MIN_COOKING_TIME,
+                                            max_value=MAX_COOKING_TIME)
 
     class Meta:
         model = Recipe
