@@ -73,10 +73,10 @@ class Recipe(models.Model):
         'Описание',
     )
     cooking_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления'
-        # validators=[MinValueValidator(
-        #     1, message='Время приготовления должно быть не менее 1 минуты!'),
-        #     MaxValueValidator(32000, 'Превышен лимит времени приготовления')]
+        verbose_name='Время приготовления',
+        validators=[MinValueValidator(
+            1, message='Время приготовления должно быть не менее 1 минуты!'),
+            MaxValueValidator(32000, 'Превышен лимит времени приготовления')]
     )
     pub_date = models.DateTimeField(
         'Дата создания',
