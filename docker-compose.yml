@@ -15,7 +15,7 @@ services:
       - ./.env
 
   backend:
-    image: angelikade/foodgram_backend:v1
+    image: angelikade/foodgram_backend:latest
     env_file:
       - ./.env
     volumes:
@@ -25,7 +25,7 @@ services:
       - db
 
   frontend:
-    image: angelikade/foodgram_frontend
+    image: angelikade/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/build/
     depends_on:
@@ -43,4 +43,4 @@ services:
       - backend
       - frontend
     ports:
-      - "8000:80"
+      - "80:80"
