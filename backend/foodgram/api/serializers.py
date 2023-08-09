@@ -1,3 +1,4 @@
+import re
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -12,6 +13,11 @@ MAX_COOKING_TIME = 32000
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя. """
+
+    def validate_username(self, value):
+        if not re.match(r'^[\w.@+-]+$', value):
+            raise serializers.ValidationError('Недопустимые символы.')
+        return value
 
     class Meta:
         model = CustomUser
