@@ -89,13 +89,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         method_name='get_is_favorited')
     is_in_shopping_cart = serializers.SerializerMethodField(
         method_name='get_is_in_shopping_cart')
-    # cooking_time = serializers.IntegerField(min_value=MIN_COOKING_TIME,
-    #                                         max_value=MAX_COOKING_TIME,
-    #                                         # error_messages={
-    #                                         #     'min_value': 'Значение должно быть больше или равно {min_value}.',
-    #                                         #     'max_value': 'Значение должно быть меньше или равно {max_value}.'
-    #                                         #     }
-                                            # )
 
     class Meta:
         model = Recipe
